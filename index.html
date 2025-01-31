@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Jindosh Riddle</title>
+    <style>
+        @font-face {
+            font-family: 'NexaSlab';
+            src: url('font/NexaSlab-Trial-Regular.otf') format('opentype');
+        }
+
+        body {
+            font-family: 'NexaSlab', serif;
+            background-color: #121212;
+            color: #f5f5f5;
+            margin: 0;
+            padding: 5px 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            min-height: 100vh;
+            font-size: 1.1rem; 
+        }
+
+        .puzzle-container {
+            background-color: #181318;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+            width: 80%;
+            max-width: 900px;
+            text-align: left;
+            border: 3px solid #3B3E43;
+        }
+
+        .dropdown {
+            margin: 2px;
+            padding: 2px;
+            font-size: 1rem;
+            background-color: #2e2e2e;
+            color: #f5f5f5;
+            border: 1px solid #3B3E43;
+            border-radius: 2px;
+        }
+
+        .table-container {
+            margin-top: 20px;
+            width: 100%;
+            height: 150px; 
+            overflow-y: auto; 
+            padding-bottom: 0; 
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            color: #f5f5f5;
+            table-layout: fixed;
+        }
+
+        table th, table td {
+            border: 1px solid #444;
+            padding: 10px;
+            text-align: center;
+            word-wrap: break-word;
+        }
+
+        .fixed-table {
+            height: 100%; 
+        }
+
+        @media (max-width: 600px) {
+            table, th, td {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="puzzle-container">
+        <h1>The Jindosh Riddle</h1>
+        <p>At the dinner party were Lady Winslow, Doctor Marcolla, Countess Contee, Madam Natsiou, and Baroness Finch.</p>
+        <p>The women sat in a row. They all wore different colors and <select class="dropdown" id="char1"></select> wore a jaunty X hat. <select class="dropdown" id="char2"></select> was at the far left, next to the guest wearing a X jacket. The lady in X sat left of someone in X. I remember that X outfit because the woman spilled her X all over it. The traveler from X was dressed entirely in X. When one of the dinner guests bragged about her <select class="dropdown" id="heirloom1"></select>, the woman next to her said they were finer in X, where she lived.</p>
+        <p>So <select class="dropdown" id="char3"></select> showed off a prized <select class="dropdown" id="heirloom2"></select>, at which the lady from X scoffed, saying it was no match for her <select class="dropdown" id="heirloom3"></select>. Someone else carried a valuable <select class="dropdown" id="heirloom4"></select> and when she saw it, the visitor from X next to her almost spilled her neighbor's X. <select class="dropdown" id="char4"></select> raised her X in toast. The lady from X, full of X, jumped up onto the table falling onto the guest in the center seat, spilling the poor woman's X. Then <select class="dropdown" id="char5"></select> captivated them all with a story about her wild youth in X.</p>
+        <p>In the morning there were four heirlooms under the table: X, <select class="dropdown" id="heirloom5"></select>, X, and X.</p>
+        <div class="table-container">
+            <div class="fixed-table">
+                <table>
+                    <tr id="character-row"></tr>
+                    <tr id="heirloom-row"></tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    <script>
+        const characters = ["", "Lady Winslow", "Doctor Marcolla", "Countess Contee", "Madam Natsiou", "Baroness Finch"];
+        const heirlooms = ["", "Ring", "Snuff Tin", "Diamond", "Bird Pendant", "War Medal"];
+
+        function populateDropdown(id, options) {
+            const select = document.getElementById(id);
+            select.innerHTML = options.map(option => `<option value="${option}">${option}</option>`).join('');
+        }
+
+        function updateDropdowns(targetId, value) {
+            const dropdowns = document.querySelectorAll(`#${targetId}`);
+            dropdowns.forEach(dropdown => {
+                dropdown.value = value;
+            });
+        }
+
+        function initializeDropdowns() {
+            ["char1", "char2", "char3", "char4", "char5"].forEach(id => populateDropdown(id, characters));
+            ["heirloom1", "heirloom2", "heirloom3", "heirloom4", "heirloom5"].forEach(id => populateDropdown(id, heirlooms));
+        }
+
+        function generateTable() {
+            const characterRow = document.getElementById('character-row');
+            const heirloomRow = document.getElementById('heirloom-row');
+            const charOrder = ["char2", "char4", "char1", "char5", "char3"];
+            const heirloomOrder = ["heirloom4", "heirloom1", "heirloom3", "heirloom5", "heirloom2"];
+
+            characterRow.innerHTML = charOrder.map(id => `<th>${document.getElementById(id).value}</th>`).join('');
+            heirloomRow.innerHTML = heirloomOrder.map(id => `<td>${document.getElementById(id).value}</td>`).join('');
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            initializeDropdowns();
+            document.querySelectorAll('.dropdown').forEach(dropdown => {
+                dropdown.addEventListener('change', (e) => {
+                    const targetId = e.target.id;
+                    const value = e.target.value;
+                    updateDropdowns(targetId, value);
+                    generateTable(); 
+                });
+            });
+        });
+    </script>
+</body>
+</html>
